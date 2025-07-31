@@ -1,4 +1,3 @@
-# Parámetros para el directorio a procesar y el modelo a usar
 param (
     [Parameter(Mandatory=$false,Position=0)]
     [Alias("d")]
@@ -18,7 +17,6 @@ param (
     [switch]$Help
 )
 
-# Mostrar ayuda si se especifica el parámetro -Help
 if ($Help) {
     Write-Host "Uso: .\Script.ps1 [-Directory|-d <ruta>] [-Model|-m <modelo>] [-Extension|-e <extensión>] [-Help]"
     Write-Host ""
@@ -27,7 +25,7 @@ if ($Help) {
     Write-Host ""
     Write-Host "Parámetros:"
     Write-Host "    -Directory, -d    Ruta al directorio que contiene los archivos de video"
-    Write-Host "                     (por defecto: directorio actual)"
+    Write-Host "                     (por defecto: /inputs)"
     Write-Host "    -Model, -m       Modelo de Whisper a utilizar"
     Write-Host "                     Valores permitidos: base, tiny, small, medium, turbo"
     Write-Host "                     (por defecto: tiny)"
@@ -37,18 +35,16 @@ if ($Help) {
     Write-Host "    -Help, -h        Muestra este mensaje de ayuda"
     Write-Host ""
     Write-Host "Ejemplo:"
-    Write-Host "    .\Script.ps1 -Directory 'C:\Videos' -Model 'base'"
+    Write-Host "    .\Script.ps1 -Directory '.\inputs' -e 'mp4' -Model 'tiny'"
     exit
 }
 
-# Validar que el directorio existe
 if (-not (Test-Path -Path $Directory)) {
     Write-Host "Error: El directorio especificado no existe: $Directory"
     Write-Host "Use -Help para ver las instrucciones de uso"
     exit 1
 }
 
-# Valida si existe algún archivo con la extensión especificada en el directorio actual o en subdirectorios
 function Test-VideoFileExists {
     param (
         [string]$Path,
@@ -59,7 +55,6 @@ function Test-VideoFileExists {
 }
 
 
-# valida si en este o en otro subdirectorio existe un archivo con extension .srt
 function Test-SrtFileExists {
     param (
         [string]$Path
@@ -67,8 +62,6 @@ function Test-SrtFileExists {
     $srtFiles = Get-ChildItem -Path $Path -Recurse -Filter *.srt -ErrorAction SilentlyContinue
     return $srtFiles.Count -gt 0
 }
-
-# si se identifica un archivo .mp4 y no se identifica algun archivo .srt en el mismo directorio ejecuta el siguiente comando
 
 function Invoke-VideoFiles {
     param (
@@ -86,15 +79,12 @@ function Invoke-VideoFiles {
             Write-Host ""
             Write-Host "Generando transcripción para: $($videoFile.DirectoryName)\$($videoFile.Name)"
             Write-Host ""
-            # Avisa que directorio y que modelo se utilizará en esta tarea
             Write-Host "Transcribiendo el archivo '$($videoFile.Name)' usando el modelo: '$Model'."
             Write-Host ""
-            # Ejecuta whisper especificando el directorio de salida y el modelo seleccionado
             whisper "$($videoFile.FullName)" --fp16=False --language Spanish --model $Model --output_format srt --output_dir "$($videoFile.DirectoryName)"
             # Transcripción completada
             Write-Host "Transcripción completada para: $($videoFile.Name)"
             Write-Host ""
-            # Transcripcion guardada en el siguiente directorio
             Write-Host "Transcripción guardada en: $($videoFile.DirectoryName)"
         } else {
             Write-Host ""
@@ -104,5 +94,4 @@ function Invoke-VideoFiles {
     }
 }
 
-# Invoca la función para procesar archivos de video en el directorio especificado
 Invoke-VideoFiles -Path $Directory -Extension $Extension
