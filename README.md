@@ -1,6 +1,8 @@
 # WhisperTranslator
 
-Herramienta desarrollada en PowerShell que permite escanear un directorio con archivos multimedia y generar transcripcion con el mismo nombre del archivo encontrado de manera automatizada utilizando Whisper AI.
+Herramienta desarrollada en PowerShell que permite escanear un directorio con archivos
+multimedia y generar transcripcion con el mismo nombre del archivo encontrado de
+manera automatizada utilizando Whisper AI.
 
 ## Requisitos Previos
 
@@ -14,12 +16,13 @@ Herramienta desarrollada en PowerShell que permite escanear un directorio con ar
 2. Asegúrate de tener Whisper AI instalado en tu sistema
 3. El script está listo para ser ejecutado
 
-## Uso
+## ¿Como utilizar esta herramienta?
 
 El script se puede ejecutar desde PowerShell con los siguientes parámetros:
 
 ```powershell
-.\WispherTranslator.ps1 [-Directory <ruta_directorio>] [-Model <modelo>] [-Extension <extensión>]
+.\WispherTranslator.ps1 [-Directory <ruta_directorio>] [-Model <modelo>] [-Extension
+<extensión>]
 ```
 
 ### Parámetros
@@ -37,37 +40,50 @@ El script se puede ejecutar desde PowerShell con los siguientes parámetros:
 ### Ejemplos de Uso
 
 1. Ejecutar con valores por defecto (carpeta `inputs`, modelo tiny, archivos mp4):
+
 ```powershell
 .\WispherTranslator.ps1
 ```
 
 2. Procesar archivos MKV usando el modelo base:
+
 ```powershell
 .\WispherTranslator.ps1 -Directory "C:\Videos" -Model "base" -Extension "mkv"
 ```
 
 3. Procesar archivos WEBM usando un modelo más preciso:
+
 ```powershell
 .\WispherTranslator.ps1 -d "C:\Videos" -m "medium" -e "webm"
 ```
 
 4. Ver la ayuda:
+
 ```powershell
 .\WispherTranslator.ps1 -Help
 ```
 
 ## Funcionamiento
 
-1. El script busca recursivamente todos los archivos del formato especificado (mp4, mkv o webm) en el directorio indicado
+1. El script busca recursivamente todos los archivos del formato especificado (mp4,
+   mkv o webm) en el directorio indicado
 2. Por cada archivo de video encontrado:
    - Verifica si ya existe un archivo .srt asociado
    - Si no existe, genera la transcripción usando Whisper AI
-   - Guarda la transcripción en formato .srt en el mismo directorio que el archivo de video
-3. Muestra mensajes de progreso durante el proceso
+   - Guarda la transcripción en formato .srt en el mismo directorio que el archivo
+     de video.
+3. Muestra mensajes de progreso durante el proceso.
 
 ## Notas
 
 - Las transcripciones se generan en español por defecto
 - Los archivos .srt se crean en el mismo directorio que los archivos de video
-- Si ya existe un archivo .srt para un video, el script lo saltará para evitar trabajo duplicado
-- El script utiliza valores por defecto para facilitar su uso: carpeta `inputs`, modelo tiny y archivos con formato mp4
+- Si ya existe un archivo .srt para un video, el script lo saltará para evitar trabajo
+duplicado
+- El script utiliza valores por defecto para facilitar su uso: carpeta `inputs`,
+modelo tiny y archivos con formato mp4
+
+## LICENSE
+
+- Este proyecto utiliza [Whisper](https://github.com/openai/whisper), un modelo de
+transcripción de OpenAI, bajo la licencia MIT.
